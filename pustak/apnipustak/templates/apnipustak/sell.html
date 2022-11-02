@@ -1,0 +1,57 @@
+{% extends "apnipustak/layout.html" %}
+{% load static %}
+
+{% block static %}
+
+  <script src="{% static 'apnipustak/sell.js' %}" defer></script>
+  <script>
+    UPLOADCARE_PUBLIC_KEY = '3e5e770e16fa67af335f';
+  </script>
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col"></div>
+    <div class="col-lg-6 col-10 border border-dark rounded m-3 m-sm-5 bg-light">
+        <form action="{% url 'sell' %}" method="post" class="p-3" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in isbn %}
+
+                <div class="mb-3">
+                    <label class="form-label">{{ field.label }}:</label>
+                    {{ field }}
+                    {% if field.name == "isbn_no"%}<span id="isbn-error" style="font-size: 80%; color:red"></span>{% endif %}
+                </div>
+
+            {% endfor %}
+            {% for field in details %}
+
+                <div class="mb-3">
+                    <label class="form-label">{{ field.label }}:</label>
+                    {{ field }}
+                </div>
+
+            {% endfor %}
+            {% for field in image %}
+
+                <div class="mb-3">
+                    <label class="form-label">{{ field.label }}:</label>
+                    {{ field }}
+                </div>
+
+            {% endfor %}
+
+
+            <div class="mb-3">
+                <input class="form-control btn btn-primary text-white" type="submit" value="Create Listing">
+            </div>
+                    
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
+
+{% endblock %}

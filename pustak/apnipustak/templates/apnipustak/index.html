@@ -1,0 +1,41 @@
+{% extends 'apnipustak/layout.html' %}
+
+{% load static %}
+
+{% block static %}
+  <link rel="stylesheet" href="{% static 'apnipustak/styles.css' %}">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- <script src="https://unpkg.com/@babel/standalone@7.9.4/babel.min.js" crossorigin="anonymous"></script>  -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="{% static 'apnipustak/index.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+
+<section class="section-intro bg-primary py-lg-5 py-2" id="banner">
+	<div class="container">
+
+	  <article class="my-5">
+	    <h1 class="display-4 text-white fw-bold"> Best Priced  <br> books in our store  </h1>
+	    <p class="lead text-white fw-bold">Good Quality Books, Economic, No worry of delivery.</p>
+	    <a href="{% url 'index' %}" class="btn btn-warning"> Purchase now</a> 
+	    <a href="#" class="btn btn-light"> Learn more </a>
+	  </article>
+
+	</div> <!-- container end.// -->
+</section>
+
+<section class="bg-white padding-y">
+    <div class="text-center container py-5">
+      <div id="titles">
+      </div>
+      <div id="listings">
+      </div>
+      <div id="product" class="single-product">
+      </div>
+      <div id="loading"><img src="https://i.pinimg.com/originals/de/9e/b6/de9eb637d1dac9a77a7f3822ed57ce07.gif" alt="loading" height="100px" width="100px;"></div>
+    </div>
+</section>
+
+{% endblock %}

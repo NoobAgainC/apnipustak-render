@@ -1,0 +1,65 @@
+{% extends "apnipustak/layout.html" %}
+
+{% load static %}
+
+{% block static %}
+    <link rel="stylesheet" href="{% static 'chat/chat.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="{% static 'chat/index.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+{{ user.id|json_script:"userid"}}
+<div id="chatbox">
+    <div id="frame">
+        <div id="sidepanel">
+            <div id="profile">
+                <div class="wrap">
+                    <img id="profile-img" src="{% if user.picture %} {{user.picture}} {% else %} https://www.pngkey.com/png/detail/114-1149847_avatar-unknown-dp.png {% endif %}" class="online" alt="{{user.username}}" />
+                    <p>{{user.username}}</p>
+                </div>
+                <hr class="contact-hr">
+            </div>
+            <div id="contacts">
+                <ul>
+                    {% for contact in contacts %}
+
+                    <li class="contact" id="{{contact.room.name}}">
+                        <div class="wrap">
+                            <img src="{% if contact.friend.picture %} {{contact.friend.picture}} {% else %} https://www.pngkey.com/png/detail/114-1149847_avatar-unknown-dp.png {% endif %}" alt="{{ contact.friend.username }}" class="userimage" />
+                            <div class="meta">
+                                <p class="name"> {{ contact.friend.username }} </p>
+                                <!-- <p class="preview">You just got LITT up, Mike.</p> -->
+                            </div>
+                        </div> 
+                    </li>
+
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="content" >
+            <div class="msginfos" id="messagesroot">
+            </div>
+            <div class="message-input">
+                <div class="wrap">
+                <input type="text" placeholder="Write your message..." id="msginput" />
+                <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+                <button class="submit" id="msgsend"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script defer>
+    const menu_height = $('.section-header').height();
+    const div_height = $(window).height();
+    if (!$(window).width < 576)
+        $('#frame').height(div_height - menu_height);
+</script>
+
+{% endblock %}

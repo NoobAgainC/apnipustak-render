@@ -1,0 +1,111 @@
+{% extends "apnipustak/layout.html" %}
+{% load static %}
+
+{% block static %}
+
+<script src="{% static 'apnipustak/watch.js' %}"></script>
+
+{% endblock %}
+
+{% block body %}
+
+<section class="padding-y bg-light wishlist">
+    <div class="container">
+    
+    <!-- =================== COMPONENT CART+SUMMARY ====================== -->
+    <div class="row">
+        <div class="col-lg"></div>
+        <div class="col-lg-9">
+    
+            <div class="card">
+                <div class="content-body">
+                    <h4 class="card-title m-4">Your shopping cart</h4>
+                    {% if not watchlist %}
+                        <div class="text-center text-muted my-5 ">No Listings wishlisted.</div>
+                    {% endif %}
+                    {% for each in watchlist %}
+                    
+                        <article class="row gy-3 m-1 watchlist" id="article-{{each.listing.id}}">
+                            <hr>
+                            <div class="col-lg-5">
+                                <figure class="itemside me-lg-5">
+                                    <div class="aside"><img src="{{ each.listing.book_listing.all.first.photo.file_cdn_urls.0 }}" class="img-sm img-thumbnail"></div>
+                                    <figcaption class="info m-2">
+                                        <a href="#" class="title"> {{ each.listing.isbn.title }} </a>
+                                        <div>
+                                            <p class="text-muted"> {{ each.listing.description }} </p>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-lg-2 col-sm-4 col-6 text-center">
+                                <div class="price-wrap lh-sm p-2"> 
+                                    <var class="price h6">&#8377;{{each.listing.offer_price}}</var>  <br>
+                                    <small class="text-muted">Original Price: &#8377;{{each.listing.original_price}} </small> 
+                                </div>
+                            </div>
+                            <div class="col-lg col-md-4 col-6 text-center">
+                                <div class="float-lg-end p-2">
+                                    <form action="{% url 'create_room' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="book-listing" value="{{each.listing.id}}">
+                                        <button type="submit" class="btn btn-primary">Buy Now</button> 
+                                        <button type="button" class="btn btn-light text-danger" onclick="removeWatch({{each.listing.id}})">Remove</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </article>
+
+                    {% endfor %}
+                </div>
+            </div> 
+    
+        </div>
+        <div class="col-lg"></div>
+    
+    <br><br>
+    
+    </div> 
+
+    <style>
+        .itemside {
+            position: relative;
+            display: flex;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .itemside, .aside {
+            position: relative;
+            flex-shrink: 0;
+            padding-left: 0.75rem;
+        }
+
+        .img-xs, .img-sm, .img-md, .img-lg {
+            display: inline-block;
+            -o-object-fit: cover;
+            object-fit: cover;
+            flex-shrink: 0;
+            flex-grow: 0;
+        }
+
+        .img-sm {
+            width: 72px;
+            height: 72px;
+        }
+        .itemside .title {
+            display: block;
+            margin-bottom: 0rem;
+        }
+        .itemside a.title {
+            color: inherit;
+        }
+        figure {
+            width: 100%;
+        }
+    </style>
+    </section>
+
+{% endblock %}

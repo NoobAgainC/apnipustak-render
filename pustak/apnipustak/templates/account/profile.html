@@ -1,0 +1,219 @@
+{% extends "apnipustak/layout.html" %}
+{% load i18n %}
+{% load static %}
+{% load templatetags %}
+{% block static %} 
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone@7.9.4/babel.min.js"></script>
+<script src="{% static 'account/index.js' %}" defer></script>
+<script>
+  UPLOADCARE_PUBLIC_KEY = '3e5e770e16fa67af335f';
+</script>
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.lang.en.min.js"></script>
+<script>
+  function changeView() {
+    $('#changedp').show(); 
+    $('#profileorder').hide();
+    }
+</script>
+{% if user != consumer %}
+<script> 
+  $(document).ready(function() {
+    renderOrders();
+  });
+</script>
+{% endif %}
+{{ consumer.id|json_script:"consumer_id" }}
+{% endblock %}
+{% block body %}
+
+  <section class="py-1 bg-light">
+    <div class="container">
+    <div class="row">
+      {% if user == consumer %}
+      <aside class="col-lg-3 col-xl-3">
+        <!--  COMPONENT MENU LIST  -->
+        <nav class="nav flex-lg-column nav-pills mb-4">
+          <a class="nav-link active" href="#">Account main</a>
+          <a class="nav-link" href="{% url 'wishlist' %}">My wishlist</a>
+          <a class="nav-link" href="{% url 'account_email' %}">Change E-mail</a>
+          <a class="nav-link" href="{% url 'account_change_password' %}">Change Password</a>
+          <a class="nav-link" href="{% url 'account_change_password' %}">Change Password</a>
+          <a class="nav-link" href="{% url 'socialaccount_connections' %}">Social Accounts</a>
+          <a class="nav-link" href="#" onclick="changeView()">Change Profile Picture</a>
+          <a class="nav-link" href="{% url 'account_logout' %}">Log out</a>
+        </nav>
+        <!--   COMPONENT MENU LIST END .//   -->
+      </aside>
+      {% else %}
+      <div class="col-lg-1 col-xl-1"></div>
+      {% endif %}
+      <main class="{% if user == consumer %} col-lg-9 col-xl-9 {% else %} col-lg-10 {% endif %}">
+        <article class="card p-3" id="profileorder">
+        <div class="content-body">
+    
+        <figure class="itemside justify-content-center">
+          <div class="aside">
+            <span class="bg-gray icon-md rounded-circle">
+              <img src="{{consumer.picture}}" class="icon-md rounded-circle">
+            </span>
+          </div>
+          <figcaption class="info">
+            <h6 class="title">{{ consumer|title }}</h6>
+            {% if user == consumer %}
+              <p>Email: {{ consumer.email }}
+              <a href="{% url 'account_email' %}" class="px-2" style="color: #0d6efd;"><i class="fa fa-pen"></i></a>
+              {% if email.verified %}
+              <span class="verified text-success fw-bolder fst-italic text-end">{% trans "Verified" %}</span>
+              {% else %}
+              <span class="unverified fw-bolder fst-italic text-danger text-end">{% trans "Unverified" %}</span>
+              {% endif %}
+            {% endif %}
+            </p>
+          </figcaption>
+        </figure>
+    
+        <hr>
+    
+        <div class="row g-2 mb-3"> 
+          <div class="col-md-6">
+            <article class="box bg-light p-1">
+              <b class="mx-2 text-muted"><i class="fa fa-map-marker-alt"></i></b> 
+              Address
+            </article>
+          </div> <!-- col.// -->
+        </div> <!-- row.// -->
+    
+        <a href="#" class="btn btn-light p-1"> <i class="me-2 fa fa-plus"></i> Add new address {todo}</a>
+    
+        <hr class="my-4">
+        
+        <div class="row m-1">
+          <table>
+            <tr scope="row">
+              {% if user == consumer %}
+              <th scope="col" class="col-xl-2 col-lg-3 col-sm-4 col-6 btn btn-primary" id="order-table" onclick="showOrders()">Your Orders</th>
+              <th scope="col" class="col-xl-2 col-lg-3 col-sm-4 col-6 btn border-primary" id="transaction-table" onclick="showTrans()">Transactions</th>
+              {% endif %}
+              <th scope="col" class="col btn border border-primary" id="list-table" onclick="renderOrders()">Active Listings</th>
+            </tr> 
+          </table>
+        </div>
+        <div class="bg-white">
+          <div id="orders">
+            {% for order in orders %}
+
+              <article class="card border-primary mb-4">
+                <div class="card-body">
+                  <header class="d-lg-flex">
+                    <div class="flex-grow-1">
+                      <h6 class="mb-0">Book Name: {{ order.listing.isbn.title }} <i class="dot"></i>  
+                      </h6>
+                      <span class="text-muted">Original Price: &#8377;{{order.listing.original_price}}</span>
+                    </div>
+                    <div>
+                      <a href="/#{{ order.listing.isbn.title|replace }}+{{ order.listing.id }}" class="btn btn-sm btn-outline-primary" id="{{ order.listing.isbn.title|replace }}">View listing</a>
+                      <a href="#" class="btn btn-sm btn-primary">Contact Seller</a> 
+                    </div>
+                  </header>
+                  <hr>
+                  <div class="row">
+                    <div class="col-md-4 col-sm-6">
+                      <figure class="itemside mb-3">
+                        <div class="aside">
+                          <img width="72" height="72" src="{{ order.listing.book_listing.all.first.photo.file_cdn_urls.0 }}" class="img-sm rounded border">
+                        </div>
+                        <figcaption class="info">
+                          <p class="title">Subject: {{ order.listing.subject }} </p>
+                          <strong> Discounted Price: &#8377;{{ order.listing.offer_price }} </strong>
+                        </figcaption>
+                      </figure>
+                    </div>
+                    <div class="col-md-4 col-sm-6">
+                      <p class="mb-0 text-muted">Seller Details</p>
+                      <p class="m-0"> 
+                        {{ order.listing.owner|title }} <br>  University: <br> Email: info@mywebsite.com </p>
+                    </div> 
+                  </div> 
+                </div> 
+              </article>
+        
+            {% endfor %}
+          </div>
+          <div id="transactions">
+            {% for order in transactions %}
+
+              <article class="card border-primary mb-4">
+                <div class="card-body">
+                  <header class="d-lg-flex">
+                    <div class="flex-grow-1">
+                      <h6 class="mb-0">Book Name: {{ order.listing }} <i class="dot"></i>  
+                      </h6>
+                      <span class="text-muted">Buyer: {{order.buyer }}</span>
+                      <span class="text-muted ps-5">Seller: {{order.seller }}</span>
+                  </header>
+                  <hr>
+                </div> 
+              </article>
+        
+            {% endfor %}
+          </div>
+          <div id="listedByUser" style="display: none;">
+          </div>
+          <div id="loading" class="text-center" style="display: none;"><img src="https://i.pinimg.com/originals/de/9e/b6/de9eb637d1dac9a77a7f3822ed57ce07.gif" alt="loading" height="100px" width="100px;"></div>
+   
+        </div>
+        
+        
+        <!--  ======== item order ======== -->
+        
+    
+    
+    
+    
+        </div> <!-- card-body .// -->
+        </article> <!-- card .// --> 
+
+        <article class="p-3 m-5 text-center" id="changedp" style="display: none;">
+          <h3>Change Profile Picture</h3>
+          <form action="{% url 'profile' username=user %}" method="post">
+
+            {% csrf_token %}
+            {{ avatar }}
+            <input type="submit">
+
+          </form>
+          
+        </article>
+      </main>
+    </div> <!-- row.// -->
+    
+    <br><br>
+    
+    
+    </div>
+    </section>
+    
+  </div>
+  <style>
+    .icon-md {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+  .itemside {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+.itemside .info {
+    padding-left: 0.75rem;
+    flex-grow: 1;
+}
+#transactions {
+  display: none;
+}
+  </style>
+
+{% endblock %}

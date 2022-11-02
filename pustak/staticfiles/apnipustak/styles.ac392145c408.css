@@ -1,0 +1,69 @@
+.description {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+.title{
+/*     https://stackoverflow.com/a/32585024 */
+    overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   -webkit-box-orient: vertical;
+   -webkit-line-clamp: 2;
+   line-height: 1.5em;        
+   height: 3em; 
+   
+}
+
+.img-cnt{
+    display:flex;
+    height:160px;
+    text-align:center;
+ }
+ 
+ .img-pro{
+    display:flex;
+    height:160px;
+    overflow: hidden;
+ }
+ 
+ .product-description{
+    min-width: fit-content;
+    min-width: -moz-fit-content;
+    min-width: -webkit-fill-available;
+ }
+
+ .img-big-wrap {
+   height:560px;
+   width: 560px;
+   /* text-align: center; */
+} 
+
+@media (min-width: 991px) and (max-width: 1200px) {
+   .img-big-wrap {
+      height:440px;
+      width: 440px;
+   } 
+}
+
+#ImagePreview {
+   height: 100%;
+   width: 100%;
+   object-fit: contain;
+}
+
+@media (min-width: 1200px) {
+   .book-details {
+      height: 13rem;
+      overflow: auto;
+   }
+} 
+
+@media (min-width: 991px) and (max-width: 1200px) {
+   .book-details {
+      height: 4.5rem;
+      overflow: auto;
+   }
+}
