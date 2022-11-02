@@ -13,10 +13,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 
 import os
-import environ
-# Initialise environment variables
-env = environ.Env()
-environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -125,9 +121,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'apnipustak-db',                      
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASS'),
-        'HOST': env('DB_HOST'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': '5432',
         "OPTIONS" : {
             "sslmode":"require"
@@ -194,7 +190,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = DEFAULT_FROM_EMAIL = 'apnipustakservice@gmail.com'
-EMAIL_HOST_PASSWORD = env('GMAIL_PASS')
+EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_PASS')
 
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
@@ -214,7 +210,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(f'rediss://:{env("REDIS_HOST")}:6380/0')]
+            "hosts": [(f'rediss://:{os.environ.get("REDIS_HOST")}:6380/0')]
         },
     },
 }
@@ -231,7 +227,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 UPLOADCARE = {
     "pub_key": '17f22389057cde9c063b',
-    "secret": env('UPLOADCARE_SECRET'),
+    "secret": os.environ.get('UPLOADCARE_SECRET'),
 }
 
 
